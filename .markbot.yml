@@ -1,0 +1,35 @@
+repo: "accessible-content-for-all"
+canvasCourse: "web-design-1"
+
+inherit:
+  - naming-restrict-live
+  - git-2
+  - html
+  - html-good-semantics
+  - aria-landmarks
+
+html:
+  - path: "index.html"
+    has:
+      - 'img[alt*="pangolin"]'
+      - "[id]"
+      - 'nav a[href^="#"]'
+
+functionality:
+  - path: "index.html"
+    label: "Accessibility"
+    tests:
+      - |
+        /** Double check all links have unique inner text or ARIA labels. **/
+        const links = $$("a");
+        let linkText = []
+        let uniqText = false;
+        [].forEach.call(links, (elem) => {
+          let text = elem.innerText.trim() + (elem.getAttribute("aria-label") || "").trim();
+          linkText.push(text.replace(/\s*/, ''));
+        });
+        uniqText = new Set(linkText);
+        if (uniqText.size != linkText.length) {
+          fail("Some links have duplicate content without unique labels.")
+        }
+        pass();
